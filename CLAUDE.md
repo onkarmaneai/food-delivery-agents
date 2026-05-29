@@ -16,6 +16,7 @@ so every concept has a real reason behind it — not just theory.
 - Short sentences. Use bullets. Small examples and analogies.
 - Define any technical term in one short line right after using it.
 - Never use 5 words when 2 will do.
+- For any complex concept explain why that concept came? What problem it solved? How it is implemented? What are the trade-offs?
 
 ## Also learning in this project
 
@@ -25,6 +26,19 @@ Alongside the multi-agent system, we are learning two Claude Code features:
 - **Skills** — reusable, named instructions/commands the agent can invoke.
 
 When these come up naturally in the build, pause and explain them in plain English.
+
+## Stack & conventions (from food-order-api)
+
+- App code lives in `app/` (FastAPI + Uvicorn). Plans live in `.claude/work/`.
+- The app runs on **port 9595**, NOT 9090 — port 9090 is taken by an unrelated
+  `serve.py` on this machine. Use 9595 for local runs and Docker.
+- Local runs use the `.venv/` virtual environment; Docker handles isolation otherwise.
+
+## Interview notes
+
+`INTERVIEW.md` (project root) collects interview-style Q&A that come up during the
+build. When the user asks an "interview question," answer in plain English AND append
+it to `INTERVIEW.md` so it builds into a study sheet over time.
 
 ## The build process (5 steps, slow and steady)
 
@@ -66,9 +80,22 @@ at once. Each is mapped to the step where it naturally shows up.
 
 ## Current status
 
-- Step: 1 (Pick & sketch) — system chosen: **Food delivery**.
-- Next: sketch the 3 agents, then start first feature with /spec-r.
-- Tech: Python. Docker comes at step 4.
+- Step: 2 (Build the core). Feature 1 done: food-order-api walking skeleton.
+- Next: add the first agent (Order Agent) — see the 3-agent sketch.
+- Tech: Python + FastAPI, Docker, port 9595.
+
+## When to track fully vs. go light
+
+Not every change needs the full spec/tasks/validate workflow. Use this rule:
+
+- **Full workflow** (/spec-r → /tasks-r → /next-r → /validate-r → commit):
+  the feature takes more than one sitting, OR it teaches a new concept.
+  Most features in this project fit here — that's the point.
+- **Go light** (just code it + a clear commit): small tweak, rename, config
+  change, or a one-file fix. Don't write 5 files for a 10-line change.
+
+Reason: the workflow is here to help learning, not to become the project.
+A heavy process the user abandons is worse than a light one they keep.
 
 ## Working style
 

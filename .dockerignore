@@ -1,0 +1,27 @@
+# Keep the build context small and the image clean.
+# These never belong inside the running app image.
+
+# Python virtual environment (huge, machine-specific)
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Git history
+.git/
+.gitignore
+
+# Project planning / docs (not needed to run the app)
+.claude/
+*.md
+
+# Local env / secrets
+.env
+*.env
+
+# OS junk
+.DS_Store
