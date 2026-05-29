@@ -46,7 +46,8 @@ When these come up naturally in the build, pause and explain them in plain Engli
 One feature = one git branch = one chat session. A fresh session does NOT remember
 past chats — only files carry over. So decisions that matter must live in files:
 `CLAUDE.md` (auto-loaded), the active `.claude/work/<feature>/` folder, `notes.md`,
-and `INTERVIEW.md`. Rule: if it matters beyond this chat, write it down, don't just say it.
+`INTERVIEW.md`, and `INSIGHTS.md` (how-we-build lessons — read it before a new feature).
+Rule: if it matters beyond this chat, write it down, don't just say it.
 
 ## Interview notes
 
