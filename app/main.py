@@ -5,10 +5,17 @@ Order Agent. The agent owns order intake and remembers the orders it created.
 No database yet — the agent keeps state in memory.
 """
 
+import logging
+
 from fastapi import FastAPI, HTTPException
 
 from app.agents.order_agent import OrderAgent
 from app.models import OrderConfirmation, OrderRequest
+
+# Turn logging on. Python's logging is silent by default, and uvicorn only sets up
+# its own loggers. This one line shows INFO and above from our app (e.g. the agent's
+# "order received" line) in the console / docker logs.
+logging.basicConfig(level=logging.INFO)
 
 # The app object. FastAPI uses it to register endpoints and serve requests.
 app = FastAPI(title="Food Order API", version="0.2.0")
