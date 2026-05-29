@@ -23,10 +23,15 @@ LARGE_ORDER_ITEM_COUNT = 4
 class OrderAgent:
     """Owns order intake. Remembers the orders it created."""
 
-    def __init__(self) -> None:
+    def __init__(self, kitchen=None) -> None:
         # The agent's own state: order_id -> confirmation.
         # In-memory only, so it is lost on restart. A real database is Step 5.
         self._orders: dict[str, OrderConfirmation] = {}
+        # Who to hand a new order to. Optional: with no kitchen the agent works
+        # exactly as before (so older tests still pass). When wired, handle()
+        # passes each order on. This is the seam where a queue could slot in at
+        # Step 4 — anything with a handle(order) method fits here, no rewrite.
+        self._kitchen = kitchen
 
     def decide(self, request: OrderRequest) -> str:
         """The brain seam. Plain rule for now: flag big orders as 'large'.
@@ -56,6 +61,11 @@ class OrderAgent:
             len(request.items),
             size,
         )
+        # Hand the order off to the kitchen, if one is wired. This is the moment
+        # two agents talk: a direct method call for now. Our own answer to the
+        # customer does not change — we still confirm "received".
+        if self._kitchen is not None:
+            self._kitchen.handle(confirmation)
         return confirmation
 
     def get(self, order_id: str) -> OrderConfirmation | None:
