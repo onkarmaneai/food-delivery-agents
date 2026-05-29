@@ -1,3 +1,4 @@
 # Dev/test tools only. Kept separate from requirements.txt so the Docker image
 # (which installs only requirements.txt) stays slim.
 pytest
+httpx  # needed by FastAPI's TestClient for the HTTP tests
