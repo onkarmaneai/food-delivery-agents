@@ -22,3 +22,4 @@ class OrderConfirmation(BaseModel):
     status: str = "received"
     customer: str
     items: list[str]
+    size: str = "normal"  # "normal" or "large" — set by the Order Agent's decide step
