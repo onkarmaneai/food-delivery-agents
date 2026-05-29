@@ -34,6 +34,13 @@ When these come up naturally in the build, pause and explain them in plain Engli
   `serve.py` on this machine. Use 9595 for local runs and Docker.
 - Local runs use the `.venv/` virtual environment; Docker handles isolation otherwise.
 
+## How we work across sessions
+
+One feature = one git branch = one chat session. A fresh session does NOT remember
+past chats — only files carry over. So decisions that matter must live in files:
+`CLAUDE.md` (auto-loaded), the active `.claude/work/<feature>/` folder, `notes.md`,
+and `INTERVIEW.md`. Rule: if it matters beyond this chat, write it down, don't just say it.
+
 ## Interview notes
 
 `INTERVIEW.md` (project root) collects interview-style Q&A that come up during the
