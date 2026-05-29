@@ -185,3 +185,55 @@ Rules:
 
 For the NEXT feature: start from `main`, make a new `feature/...` branch. Never reuse
 an old feature branch.
+
+---
+
+## Q10. After I change the code, do I need to rebuild the Docker image?
+
+**Yes. A Docker image is a frozen snapshot. It does not see your new code until you rebuild.**
+
+- `docker build` **copies** your files into the image at that moment (`COPY app/ ./app/`).
+- After that, the image is fixed. Editing a file on your Mac does **not** change the image.
+- A running container runs the **old** copy until you rebuild and start a fresh one.
+
+So the loop after any code change is:
+
+```bash
+docker rm -f order-agent-test                 # stop the old container
+docker build -t food-order-api:order-agent .  # rebuild with new code
+docker run -d --name order-agent-test -p 9595:9595 food-order-api:order-agent
+```
+
+**Why uvicorn felt different:** running locally with uvicorn, you can add `--reload` and it
+watches your files and restarts on every save. Docker has no such magic by default — the
+image is a snapshot, so you rebuild.
+
+Analogy: the image is a **photo** of your code. Change your hairstyle and the old photo
+still shows the old hair. You must take a **new photo** (rebuild) to see the change.
+
+---
+
+## Q11. The app ran on uvicorn AND on Docker. How? Can they run at the same time?
+
+**They took turns. They cannot both use the same port at the same time.**
+
+A port is like **one phone line** — only one program can hold it at once.
+
+- uvicorn ran and held host port 9595.
+- I stopped it.
+- Then Docker (`-p 9595:9595`) grabbed the now-free 9595.
+
+They never overlapped. Starting Docker on 9595 while uvicorn is still up fails with
+**"address already in use."**
+
+**To run both at once, give them different host ports:**
+
+```bash
+.venv/bin/python -m uvicorn app.main:app --port 9595   # uvicorn on 9595
+docker run -d -p 9596:9595 food-order-api:order-agent   # Docker on 9596
+```
+
+Now uvicorn = `127.0.0.1:9595`, Docker = `127.0.0.1:9596`. Two lines, no clash.
+
+About `-p 9596:9595`: **left = your Mac's port, right = the port inside the container**.
+The app inside always listens on 9595; you map any free Mac port to it.

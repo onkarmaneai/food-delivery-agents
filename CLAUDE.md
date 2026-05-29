@@ -33,6 +33,13 @@ When these come up naturally in the build, pause and explain them in plain Engli
 - The app runs on **port 9595**, NOT 9090 — port 9090 is taken by an unrelated
   `serve.py` on this machine. Use 9595 for local runs and Docker.
 - Local runs use the `.venv/` virtual environment; Docker handles isolation otherwise.
+- Agents live in `app/agents/`, one file per agent. An agent = autonomous component:
+  one job, owns its state, talks via messages (`handle(request) -> result`). Plain
+  Python now, with a `decide()` seam where an LLM brain can slot in later.
+- Tests live in `tests/`. Dev/test deps go in `requirements-dev.txt` (kept out of the
+  runtime `requirements.txt` so the Docker image stays slim).
+- Gotcha: Python logging is silent by default; uvicorn only configures its own loggers.
+  Put `logging.basicConfig(level=logging.INFO)` in `main.py` so app logs show.
 
 ## How we work across sessions
 
@@ -87,8 +94,9 @@ at once. Each is mapped to the step where it naturally shows up.
 
 ## Current status
 
-- Step: 2 (Build the core). Feature 1 done: food-order-api walking skeleton.
-- Next: add the first agent (Order Agent) — see the 3-agent sketch.
+- Step: 2 (Build the core). Done: food-order-api skeleton; Order Agent (handle/decide/get,
+  in-memory state, POST delegates + GET /orders/{id}).
+- Next: agent #2 — Kitchen Agent — so two agents can talk (the heart of Step 2).
 - Tech: Python + FastAPI, Docker, port 9595.
 
 ## When to track fully vs. go light
