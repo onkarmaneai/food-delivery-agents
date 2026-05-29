@@ -36,6 +36,12 @@ When these come up naturally in the build, pause and explain them in plain Engli
 - Agents live in `app/agents/`, one file per agent. An agent = autonomous component:
   one job, owns its state, talks via messages (`handle(request) -> result`). Plain
   Python now, with a `decide()` seam where an LLM brain can slot in later.
+- Agents hand off work by a direct in-process call for now: one agent holds an
+  optional injected reference to the next (e.g. `OrderAgent(kitchen=...)`, default
+  `None` so it still runs alone). `handle(order)` is the seam — a queue can replace
+  the direct call at Step 4 with no agent rewrite.
+- Each agent owns its own slice of state for the same order (Order = intake,
+  Kitchen = cooking). Read each via its own endpoint: `GET /orders/{id}` vs `GET /kitchen/{id}`.
 - Tests live in `tests/`. Dev/test deps go in `requirements-dev.txt` (kept out of the
   runtime `requirements.txt` so the Docker image stays slim).
 - Gotcha: Python logging is silent by default; uvicorn only configures its own loggers.
@@ -95,9 +101,11 @@ at once. Each is mapped to the step where it naturally shows up.
 
 ## Current status
 
-- Step: 2 (Build the core). Done: food-order-api skeleton; Order Agent (handle/decide/get,
-  in-memory state, POST delegates + GET /orders/{id}).
-- Next: agent #2 — Kitchen Agent — so two agents can talk (the heart of Step 2).
+- Step: 2 (Build the core). Done: food-order-api skeleton; Order Agent; Kitchen
+  Agent (handle/decide/advance/get, own state; Order Agent hands off by direct
+  call; /kitchen/{id} + advance; status received→cooking→ready).
+- Next (confirm with user): agent #3 — Delivery Agent — to extend the chain, OR
+  move to Step 3 (make it solid: idempotency, indexing, monitoring).
 - Tech: Python + FastAPI, Docker, port 9595.
 
 ## When to track fully vs. go light
