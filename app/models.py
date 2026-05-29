@@ -23,3 +23,16 @@ class OrderConfirmation(BaseModel):
     customer: str
     items: list[str]
     size: str = "normal"  # "normal" or "large" — set by the Order Agent's decide step
+
+
+class KitchenTicket(BaseModel):
+    """The kitchen's own record of an order it is cooking.
+
+    The Order Agent owns the order's intake; the Kitchen Agent owns this ticket
+    and its cooking status. Same order, two agents, each with its own slice of state.
+    """
+
+    order_id: str
+    status: str = "received"  # "received" -> "cooking" -> "ready"
+    customer: str
+    items: list[str]
