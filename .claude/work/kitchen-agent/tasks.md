@@ -12,5 +12,5 @@
 - [x] Run the full suite — confirm existing Order Agent + orders-API tests stay green
 
 ## Bundle 3 — verify for real
-- [ ] Run uvicorn on 9595 and walk the curl flow: post order → read kitchen ticket → advance twice → see received→cooking→ready
-- [ ] Rebuild the Docker image and repeat the flow to confirm parity (INTERVIEW Q10)
+- [x] Run uvicorn on 9595 and walk the curl flow: post order → read kitchen ticket → advance twice → see received→cooking→ready
+- [x] Rebuild the Docker image and repeat the flow to confirm parity (INTERVIEW Q10)
