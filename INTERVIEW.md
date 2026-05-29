@@ -154,3 +154,34 @@ Restaurant analogy:
 Why three? I can build each step perfectly and the app can run fine, yet I might have
 quietly skipped a spec requirement. Only a fresh reader (validate) reliably catches
 that blind spot.
+
+---
+
+## Q9. Git branch workflow — what we follow (and why deleting a branch is safe)
+
+A branch is just a movable pointer to a commit. Deleting a branch removes the pointer,
+NOT the commits — if those commits are already merged into `main`, nothing is lost.
+
+The loop we follow (one branch per feature):
+
+```
+main  ← always working, stable code (never build directly on it)
+  │
+  ├─ git checkout -b feature/<name>     # 1. branch off main
+  │     ...build, commit per task...
+  │     ...squash into one clean commit at the end...
+  │
+  ├─ git checkout main
+  ├─ git merge --ff-only feature/<name> # 2. merge finished work into main
+  ├─ git push                           # 3. push main to GitHub
+  └─ git branch -d feature/<name>        # 4. delete the branch (work is safe in main)
+```
+
+Rules:
+1. `main` stays clean and working — never build directly on it.
+2. Each feature gets its own branch `feature/<name>`.
+3. Merge to `main` only after the feature is built, verified, and validated.
+4. Delete the branch when done — the commits live on in `main`.
+
+For the NEXT feature: start from `main`, make a new `feature/...` branch. Never reuse
+an old feature branch.
